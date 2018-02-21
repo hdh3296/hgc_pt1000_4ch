@@ -13,7 +13,7 @@ unsigned char ad_calc_wait_count;
 unsigned	long    SumAD	= 0;
 unsigned	int	    SumCnt	= 0;
 
-#define CH_MAX	2 // todo
+#define CH_MAX	4 // todo
 unsigned int AD_IN_mV_buffer[CH_MAX] = {0,}; // 각 채널에서 읽어드린 AD 값 
 unsigned char AD_updated_buffer[CH_MAX] = {0,};
 
@@ -112,11 +112,18 @@ void update_A_IN_mA__and__V_IN_mV(void)
         {
             switch (ch)
             {
+				// todo !!!
                 case 0:
                     ccr_in_current_mV = AD_IN_mV_buffer[ch];
                     A_IN_mV_was_updated = TRUE;
                     break;
                 case 1:
+                    V_IN_mV = AD_IN_mV_buffer[ch];
+                    break;
+				case 2:
+                    V_IN_mV = AD_IN_mV_buffer[ch];
+                    break;
+				case 3:
                     V_IN_mV = AD_IN_mV_buffer[ch];
                     break;
                 default:
@@ -139,12 +146,18 @@ uchar get_AD_channel(uchar AdSel)
 
     switch (AdSel)
     {
-        case 0: // A_IN
+        case 0: 
             AdSel = 1;
             break;
-        case 1: // V_IN
-            AdSel = 0;
+        case 1: 
+            AdSel = 2;
             break;
+        case 2: 
+            AdSel = 3;
+            break;
+        case 3: 
+            AdSel = 0;
+            break;		
         default:
             AdSel = 0;
             break;
