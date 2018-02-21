@@ -82,7 +82,7 @@ bool is_update_AD(   )
         sum_count = 100;
         if (SumCnt >= sum_count)
         {
-            AdVal = (((SumAD * 1000) / 1240) / SumCnt); // 12비트 3.3V 기준
+            AdVal =  ((SumAD * 1000) / (0xfff / 5)) / SumCnt ; // 12비트 5000 mV 기준
             AD_IN_mV_buffer[AD_channel] = (unsigned int)AdVal;
             AD_updated_buffer[AD_channel] = TRUE;
 
@@ -133,19 +133,14 @@ void update_A_IN_mA__and__V_IN_mV(void)
 }
 
 
-uchar get_AD_channel(uchar AdSel, uchar ch)
+uchar get_AD_channel(uchar AdSel)
 {
-    static unsigned char cnt = 0;
+
 
     switch (AdSel)
     {
         case 0: // A_IN
-            cnt++;
-            if(cnt > 100)
-            {
-                AdSel = 1;
-                cnt = 0;
-            }
+            AdSel = 1;
             break;
         case 1: // V_IN
             AdSel = 0;
@@ -228,7 +223,7 @@ void process_AD(void)
 
     update_A_IN_mA__and__V_IN_mV();
 
-    AD_channel = get_AD_channel(AD_channel, 1); // 채널 변경
+    AD_channel = get_AD_channel(AD_channel); // 채널 변경
     set_AD_channel_register(AD_channel); // 채널 설정
 
     check_changing_of_AD_channel();
