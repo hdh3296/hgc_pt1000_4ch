@@ -1,4 +1,8 @@
 
+#ifndef	__INITIAL_H__
+#define	__INITIAL_H__
+
+
 #define  MANUAL_LAMP	LATG1		//user lamp1
 #define  AUTO_LAMP		LATG0		//user lamp2
 #define  USER_LAMP3 	LATG2
@@ -13,3 +17,6 @@
 
 extern void PortInit(void);
 extern void	Timer0Init(void);
+
+#endif
+

@@ -1,8 +1,9 @@
 
 #include <pic18.h>
 
-#include "mcu_pic18f65k80.h"
-#include "initial.h"
+#include 	"mcu_pic18f65k80.h"
+#include 	"initial.h"
+#include	"ad_conversion.h"
 
 void main(void)
 {
@@ -10,12 +11,16 @@ void main(void)
 	CPU_Initial();
 	PortInit();
 	Timer0Init();
+	InitAD();
     ei();
+
+	DONE = 1;	
 
     while (1)
     {
-		CLRWDT();	
+		CLRWDT();
 
+		process_AD();
     }
 }
 
@@ -37,4 +42,15 @@ void interrupt isr(void)
 			LATD0 = ~LATD0;
 		}
     }
+
+    if (ADIF)
+    {
+        unsigned int ad;
+        ad = ADRES;
+
+		set_input_ad(ad);
+		
+        ADIF = 0;
+        DONE = 0;
+    }	
 }
