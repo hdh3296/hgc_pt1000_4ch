@@ -32,7 +32,27 @@ void	PortInit(void)
 
 
 	TRIS_PIN_TEMP_SET_LED	= 0;
-	PIN_TEMP_SET_LED 		= 1; // led off
+	PIN_TEMP_SET_LED 		= 1; 	// if 1 = led off
+
+	TRIS_PIN_ERR_ALARM_LED	= 0;		
+	PIN_ERR_ALARM_LED 		= 1;	// LED_E0
+
+	TRIS_PIN_HEATER_LED		= 0;
+	PIN_HEATER_LED			= 1;
+		
+
+	TRIS_PIN_HEATER_OUT	 	= 0;		
+	PIN_HEATER_OUT			= 0; 	// if 0 = heater off 
+
+	TRIS_PIN_SW_BCD_1 		= 1;	 
+	PIN_SW_BCD_1			= 0;
+	TRIS_PIN_SW_BCD_2 		= 1;	 
+	PIN_SW_BCD_2			= 0;
+	TRIS_PIN_SW_BCD_3 		= 1;	 
+	PIN_SW_BCD_3			= 0;
+	TRIS_PIN_SW_BCD_4 		= 1;	 
+	PIN_SW_BCD_4			= 0;	
+	 	
 	
 }
 
