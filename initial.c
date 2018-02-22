@@ -31,29 +31,79 @@ void	PortInit(void)
 	USER_LAMP4=0;
 
 
-	TRIS_PIN_TEMP_SET_LED	= 0;
-	PIN_TEMP_SET_LED 		= 1; 	// if 1 = led off
+	TRIS_PIN_TEMP_SET_LED_0	= 0;
+	PIN_TEMP_SET_LED_0 		= 1; 	// if 1 = led off
+	TRIS_PIN_TEMP_SET_LED_1	= 0;
+	PIN_TEMP_SET_LED_1 		= 1; 	// if 1 = led off
+	TRIS_PIN_TEMP_SET_LED_2	= 0;
+	PIN_TEMP_SET_LED_2 		= 1; 	// if 1 = led off
+	TRIS_PIN_TEMP_SET_LED_3	= 0;
+	PIN_TEMP_SET_LED_3 		= 1; 	// if 1 = led off	
 
-	TRIS_PIN_ERR_ALARM_LED	= 0;		
-	PIN_ERR_ALARM_LED 		= 1;	// LED_E0
-
-	TRIS_PIN_HEATER_LED		= 0;
-	PIN_HEATER_LED			= 1;
-		
-
-	TRIS_PIN_HEATER_OUT	 	= 0;		
-	PIN_HEATER_OUT			= 0; 	// if 0 = heater off 
-
-	TRIS_PIN_SW_BCD_1 		= 1;	 
-	PIN_SW_BCD_1			= 0;
-	TRIS_PIN_SW_BCD_2 		= 1;	 
-	PIN_SW_BCD_2			= 0;
-	TRIS_PIN_SW_BCD_3 		= 1;	 
-	PIN_SW_BCD_3			= 0;
-	TRIS_PIN_SW_BCD_4 		= 1;	 
-	PIN_SW_BCD_4			= 0;	
-	 	
+	TRIS_PIN_ERR_ALARM_LED_0	= 0;		
+	PIN_ERR_ALARM_LED_0 		= 1;	// LED_E0
+	TRIS_PIN_ERR_ALARM_LED_1	= 0;		
+	PIN_ERR_ALARM_LED_1 		= 1;	// LED_E0
+	TRIS_PIN_ERR_ALARM_LED_2	= 0;		
+	PIN_ERR_ALARM_LED_2 		= 1;	// LED_E0
+	TRIS_PIN_ERR_ALARM_LED_3	= 0;		
+	PIN_ERR_ALARM_LED_3 		= 1;	// LED_E0
 	
+
+
+	TRIS_PIN_HEATER_LED_0		= 0;
+	PIN_HEATER_LED_0			= 1;
+	TRIS_PIN_HEATER_LED_1		= 0;
+	PIN_HEATER_LED_1			= 1;
+	TRIS_PIN_HEATER_LED_2		= 0;
+	PIN_HEATER_LED_2			= 1;
+	TRIS_PIN_HEATER_LED_3		= 0;
+	PIN_HEATER_LED_3			= 1;
+
+	TRIS_PIN_HEATER_0_OUT	 	= 0;		
+	PIN_HEATER_0_OUT			= 0; 	// if 0 = heater off 
+	TRIS_PIN_HEATER_1_OUT	 	= 0;		
+	PIN_HEATER_1_OUT			= 0;
+	TRIS_PIN_HEATER_2_OUT	 	= 0;		
+	PIN_HEATER_2_OUT			= 0;
+	TRIS_PIN_HEATER_3_OUT	 	= 0;		
+	PIN_HEATER_3_OUT			= 0;
+
+	TRIS_PIN_SW_BCD_1_A 		= 1;	 
+	PIN_SW_BCD_1_A				= 0;
+	TRIS_PIN_SW_BCD_2_A 		= 1;	 
+	PIN_SW_BCD_2_A				= 0;
+	TRIS_PIN_SW_BCD_3_A 		= 1;	 
+	PIN_SW_BCD_3_A				= 0;
+	TRIS_PIN_SW_BCD_4_A 		= 1;	 
+	PIN_SW_BCD_4_A				= 0;	
+
+	TRIS_PIN_SW_BCD_1_B 		= 1;	 
+	PIN_SW_BCD_1_B				= 0;
+	TRIS_PIN_SW_BCD_2_B 		= 1;	 
+	PIN_SW_BCD_2_B				= 0;
+	TRIS_PIN_SW_BCD_3_B 		= 1;	 
+	PIN_SW_BCD_3_B				= 0;
+	TRIS_PIN_SW_BCD_4_B 		= 1;	 
+	PIN_SW_BCD_4_B				= 0;	
+
+	TRIS_PIN_SW_BCD_1_C 		= 1;	 
+	PIN_SW_BCD_1_C				= 0;
+	TRIS_PIN_SW_BCD_2_C 		= 1;	 
+	PIN_SW_BCD_2_C				= 0;
+	TRIS_PIN_SW_BCD_3_C 		= 1;	 
+	PIN_SW_BCD_3_C				= 0;
+	TRIS_PIN_SW_BCD_4_C 		= 1;	 
+	PIN_SW_BCD_4_C				= 0;
+
+	TRIS_PIN_SW_BCD_1_D 		= 1;	 
+	PIN_SW_BCD_1_D				= 0;
+	TRIS_PIN_SW_BCD_2_D 		= 1;	 
+	PIN_SW_BCD_2_D				= 0;
+	TRIS_PIN_SW_BCD_3_D 		= 1;	 
+	PIN_SW_BCD_3_D				= 0;
+	TRIS_PIN_SW_BCD_4_D 		= 1;	 
+	PIN_SW_BCD_4_D				= 0;
 }
 
 
