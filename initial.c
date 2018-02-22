@@ -104,6 +104,9 @@ void	PortInit(void)
 	PIN_SW_BCD_3_D				= 0;
 	TRIS_PIN_SW_BCD_4_D 		= 1;	 
 	PIN_SW_BCD_4_D				= 0;
+
+	TRIS_PIN_RUN_LED	= 0;
+	PIN_RUN_LED			= 1;
 }
 
 

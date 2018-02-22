@@ -357,6 +357,11 @@ void interrupt isr(void)
         TMR0H = MSEC_H;
 
 		timer_msec++;
+		if (timer_msec > 500)
+		{
+			timer_msec = 0;
+			PIN_RUN_LED = ~PIN_RUN_LED;
+		}
 
     }
 

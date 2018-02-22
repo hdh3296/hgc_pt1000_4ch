@@ -101,6 +101,8 @@ extern volatile bit RB1x                @ ((unsigned)&PORTB*8)+1;
 
 
 
+#define PIN_RUN_LED			RB5	
+#define TRIS_PIN_RUN_LED 	TRISB5 
 
 
 extern void PortInit(void);
