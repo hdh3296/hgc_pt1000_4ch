@@ -6,13 +6,13 @@
 
 void	PortInit(void)
 {
-	TRISA=0;
-	TRISB=0;
-	TRISC=0;
-	TRISD=0;
-	TRISE=0;
-	TRISF=0;
-	TRISG=0;
+	TRISA=1;
+	TRISB=1;
+	TRISC=1;
+	TRISD=1;
+	TRISE=1;
+	TRISF=1;
+	TRISG=1;
 
 	TRISE=0x0f;
 	TRISB=0xff;
@@ -29,6 +29,11 @@ void	PortInit(void)
 	AUTO_LAMP=0;
 	USER_LAMP3=0;
 	USER_LAMP4=0;
+
+
+	TRIS_PIN_TEMP_SET_LED	= 0;
+	PIN_TEMP_SET_LED 		= 1; // led off
+	
 }
 
 

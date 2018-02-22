@@ -13,8 +13,8 @@ unsigned char ad_calc_wait_count;
 unsigned	long    SumAD	= 0;
 unsigned	int	    SumCnt	= 0;
 
-#define CH_MAX	4 // todo
-unsigned int AD_IN_mV_buffer[CH_MAX] = {0,}; // 각 채널에서 읽어드린 AD 값 
+
+unsigned int AD_IN_mV_buffer[CH_MAX] = {0,}; 
 unsigned char AD_updated_buffer[CH_MAX] = {0,};
 
 unsigned int ccr_in_current_mV = 0;
@@ -25,6 +25,12 @@ unsigned    int   	bef_ad_channel	= 0;
 
 void	InitAD(void)
 {
+	TRISA0=1;
+	TRISA1=1;
+	TRISA2=1;
+	TRISA3=1;
+
+
     ADCON0 = 0x01;	//ADON = 1;
     ADCON1 = 0x80;  //event= timer1
 
@@ -102,42 +108,6 @@ bool is_update_AD(   )
 }
 
 
-void update_A_IN_mA__and__V_IN_mV(void)
-{
-    unsigned char ch;
-
-    for (ch=0; ch<CH_MAX; ch++)
-    {
-        if (AD_updated_buffer[ch])
-        {
-            switch (ch)
-            {
-				// todo !!!
-                case 0:
-                    ccr_in_current_mV = AD_IN_mV_buffer[ch];
-                    A_IN_mV_was_updated = TRUE;
-                    break;
-                case 1:
-                    V_IN_mV = AD_IN_mV_buffer[ch];
-                    break;
-				case 2:
-                    V_IN_mV = AD_IN_mV_buffer[ch];
-                    break;
-				case 3:
-                    V_IN_mV = AD_IN_mV_buffer[ch];
-                    break;
-                default:
-                    break;
-            }
-
-            for (ch=0; ch<CH_MAX; ch++)
-            {
-                AD_updated_buffer[ch] = FALSE;
-            }
-            break;
-        }
-    }
-}
 
 
 uchar get_AD_channel(uchar AdSel)
@@ -233,8 +203,6 @@ void check_changing_of_AD_channel()
 void process_AD(void)
 {
     if (!is_update_AD()) return;
-
-    update_A_IN_mA__and__V_IN_mV();
 
     AD_channel = get_AD_channel(AD_channel); // 채널 변경
     set_AD_channel_register(AD_channel); // 채널 설정

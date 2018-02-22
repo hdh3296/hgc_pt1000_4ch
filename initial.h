@@ -12,6 +12,9 @@
 #define  MSEC_L  0x18
 
 
+#define PIN_TEMP_SET_LED	 	RD4	// LED_S0 (set led)
+#define TRIS_PIN_TEMP_SET_LED	TRISD4 
+
 
 
 
