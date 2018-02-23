@@ -9,19 +9,20 @@
 
 #define MAX_CH	4
 
+
 typedef struct
 {
-	unsigned	bcd_1				: 1;
+	unsigned	bcd_1				: 1; 
 	unsigned	bcd_2				: 1;
 	unsigned	bcd_3				: 1;
 	unsigned	bcd_4				: 1;
 	
 	unsigned	heater_onoff		: 1;
-	unsigned	heater_led_onoff	: 1;
-	unsigned	error_led_onoff		: 1;
-	unsigned	set_led_onoff		: 1;
+	unsigned	heaterled_onoff	: 1;
+	unsigned	errorled_onoff		: 1;
+	unsigned	setled_onoff		: 1;
 
-	unsigned	b_now_power_on_time	: 1;
+	unsigned	b_turned_on_power	: 1;
 	
 }	HgcPt1000;
 
@@ -42,31 +43,13 @@ bool onoff_setled(unsigned int Temp_mV)
 }
 
 
-bit is_error(unsigned int ch, unsigned int now_temp_mv)
+
+bool is_error(unsigned int now_temp_mv)
 {
-
-    pt1000[ch].error_led_onoff = OFF_LED;
-
-    if (now_temp_mv >= 4900)
-    {
-        pt1000[ch].error_led_onoff = ON_LED;
-		
-		return TRUE;
-    }
-	
-
-    if (now_temp_mv <= 100)
-    {
-        pt1000[ch].error_led_onoff = ON_LED;
-
-		return TRUE;
-    }
-
-	return FALSE;
-
+	return (now_temp_mv >= 4900) || (now_temp_mv <= 100);
 }
 
-volatile unsigned int xxxxxx;
+
 unsigned int get_bcd(unsigned int ch)
 {
     unsigned int nSetNumber = 0;
@@ -83,12 +66,12 @@ unsigned int get_bcd(unsigned int ch)
     bit3 = (bit3 << 3);
 
     nSetNumber = (bit3 | bit2 | bit1 | bit0);
-	xxxxxx = nSetNumber;
+
     return nSetNumber;
 }
 
 
-bit set_low_and_high_temp(unsigned int nBCD, 
+bool set_low_and_high_temp(unsigned int nBCD, 
 			tag_TempValueDef *OnTemp, 
 			tag_TempValueDef *OffTemp)
 {
@@ -142,7 +125,7 @@ bit set_low_and_high_temp(unsigned int nBCD,
 }
 
 
-bit onoff_heater_when_now_power_on_time(unsigned int now_temp_mv, tag_TempValueDef hightemp_for_heater_off)
+bool onoff_heater_when_now_power_on_time(unsigned int now_temp_mv, tag_TempValueDef hightemp_for_heater_off)
 {
 
 	if (now_temp_mv < (hightemp_for_heater_off - 20)) 
@@ -155,7 +138,7 @@ bit onoff_heater_when_now_power_on_time(unsigned int now_temp_mv, tag_TempValueD
 }
 
 
-bit onoff_heater_as_temp(unsigned int ch,
+bool onoff_heater_as_temp(unsigned int ch,
 				unsigned int now_temp_mv, 
 				tag_TempValueDef lowtemp_for_heater_on,
 				tag_TempValueDef hightemp_for_heater_off)
@@ -176,38 +159,36 @@ bit onoff_heater_as_temp(unsigned int ch,
 
 
 
-bit is_onoff_heater_by_settemp_or_error(unsigned int ch, unsigned int now_temp_mv)
+bool onoff_heater_by_settemp_or_error(unsigned int ch, unsigned int now_temp_mv)
 {
-    unsigned int n_bcd;
-	static bit bError;
-	tag_TempValueDef	lowtemp_for_heater_on, hightemp_for_heater_off;	
-	
+	tag_TempValueDef	lowtemp_for_heater_on, hightemp_for_heater_off;		
 
-    bError = is_error(ch, now_temp_mv);
-	if (bError)
+	if (is_error(now_temp_mv))
 	{
+		pt1000[ch].errorled_onoff = ON_LED;
 		return OFF_RELAY;
 	}
+	pt1000[ch].errorled_onoff = OFF_LED;
 
-
-	n_bcd = get_bcd(ch);	
-	set_low_and_high_temp(n_bcd, &lowtemp_for_heater_on, &hightemp_for_heater_off);	
 	
-			
-	if (pt1000[ch].b_now_power_on_time)  
-	{
-		pt1000[ch].b_now_power_on_time = FALSE;		
+	set_low_and_high_temp(get_bcd(ch), &lowtemp_for_heater_on, &hightemp_for_heater_off);		
 
+	
+	if (pt1000[ch].b_turned_on_power)  
+	{
+		pt1000[ch].b_turned_on_power = FALSE;		
 		return onoff_heater_when_now_power_on_time(now_temp_mv, hightemp_for_heater_off);
 	}
-	else
-	{
-		return onoff_heater_as_temp(ch, now_temp_mv, lowtemp_for_heater_on, hightemp_for_heater_off);	
-	}
+	
+	
+	return onoff_heater_as_temp(ch, now_temp_mv, lowtemp_for_heater_on, hightemp_for_heater_off);	
+	
 }
 
 
-bool onoff_led_by_heater(unsigned int ch)
+
+
+bool onoff_heaterled_by_heater(unsigned int ch)
 {
 	if (pt1000[ch].heater_onoff == ON_RELAY)
 	{
@@ -220,7 +201,7 @@ bool onoff_led_by_heater(unsigned int ch)
 }
 
 
-void onoff_heater_relay_all()
+void set_all_heater_pin()
 {
 	PIN_HEATER_0_OUT = pt1000[0].heater_onoff;
 	PIN_HEATER_1_OUT = pt1000[1].heater_onoff;
@@ -229,33 +210,33 @@ void onoff_heater_relay_all()
 }
 
 
-void onoff_set_led_all()
+void set_all_setled_pin()
 {
-	PIN_TEMP_SET_LED_0	= pt1000[0].set_led_onoff;
-	PIN_TEMP_SET_LED_1	= pt1000[1].set_led_onoff;
-	PIN_TEMP_SET_LED_2	= pt1000[2].set_led_onoff;
-	PIN_TEMP_SET_LED_3	= pt1000[3].set_led_onoff;
+	PIN_TEMP_SET_LED_0	= pt1000[0].setled_onoff;
+	PIN_TEMP_SET_LED_1	= pt1000[1].setled_onoff;
+	PIN_TEMP_SET_LED_2	= pt1000[2].setled_onoff;
+	PIN_TEMP_SET_LED_3	= pt1000[3].setled_onoff;
 }
 
-void set_heater_led_to_onoff()
+void set_all_heaterled_pin()
 {
-	PIN_HEATER_LED_0 = pt1000[0].heater_led_onoff;
-	PIN_HEATER_LED_1 = pt1000[1].heater_led_onoff;
-	PIN_HEATER_LED_2 = pt1000[2].heater_led_onoff;
-	PIN_HEATER_LED_3 = pt1000[3].heater_led_onoff;
-}
-
-
-void set_error_led_to_ofoff()
-{
-	PIN_ERR_ALARM_LED_0 = pt1000[0].error_led_onoff;
-	PIN_ERR_ALARM_LED_1 = pt1000[1].error_led_onoff;
-	PIN_ERR_ALARM_LED_2 = pt1000[2].error_led_onoff;
-	PIN_ERR_ALARM_LED_3 = pt1000[3].error_led_onoff;
+	PIN_HEATER_LED_0 = pt1000[0].heaterled_onoff;
+	PIN_HEATER_LED_1 = pt1000[1].heaterled_onoff;
+	PIN_HEATER_LED_2 = pt1000[2].heaterled_onoff;
+	PIN_HEATER_LED_3 = pt1000[3].heaterled_onoff;
 }
 
 
-void get_bcd_input()
+void set_all_errorled_pin()
+{
+	PIN_ERR_ALARM_LED_0 = pt1000[0].errorled_onoff;
+	PIN_ERR_ALARM_LED_1 = pt1000[1].errorled_onoff;
+	PIN_ERR_ALARM_LED_2 = pt1000[2].errorled_onoff;
+	PIN_ERR_ALARM_LED_3 = pt1000[3].errorled_onoff;
+}
+
+
+void set_all_bcd_by_input_pin()
 {
 	pt1000[0].bcd_1 = PIN_SW_BCD_1_A;
 	pt1000[0].bcd_2 = PIN_SW_BCD_2_A;
@@ -278,70 +259,83 @@ void get_bcd_input()
 	pt1000[3].bcd_4 = PIN_SW_BCD_4_D;	
 }
 
-void onoff_heater_as_channel(unsigned int ch)
+
+
+void onoff_setled_heater_as_channel(unsigned int ch)
 {
 	
-	if (AD_updated_buffer[ch])
+	if (b_updated_ad[ch])
 	{		
-		AD_updated_buffer[ch] = FALSE;
-	
-		pt1000[ch].set_led_onoff = onoff_setled(AD_IN_mV_buffer[ch]);
-	
-		pt1000[ch].heater_onoff = is_onoff_heater_by_settemp_or_error(ch, AD_IN_mV_buffer[ch]);
+		b_updated_ad[ch] = FALSE;
+
+		pt1000[ch].setled_onoff = onoff_setled(ad_updated_mv[ch]);	
+
+		pt1000[ch].heater_onoff = onoff_heater_by_settemp_or_error(ch, ad_updated_mv[ch]);
 	}	
-
-	pt1000[ch].heater_led_onoff = onoff_led_by_heater(ch);
-
-	onoff_heater_relay_all();	
-	onoff_set_led_all();
-	set_heater_led_to_onoff();
-	set_error_led_to_ofoff();
-	get_bcd_input();
 }
 
 
-void onoff_heater_when_adupdated()
-{
-	unsigned int i;
-
-	for (i=0; i<4; i++)
-	{
-		onoff_heater_as_channel(i);
-	}
-
-}
-
-void main(void)
+void init_pt1000()
 {
 	unsigned int ch;
 
-	di();
-	CPU_Initial();
-	PortInit();
-	Timer0Init();
-	InitAD();
-    ei();
-
-	DONE = 1;	
-	
-
 	for (ch=0; ch<MAX_CH; ch++)
 	{
-		pt1000[ch].b_now_power_on_time = TRUE;
+		pt1000[ch].b_turned_on_power = TRUE;
+
+		pt1000[ch].bcd_1	= 1;
+		pt1000[ch].bcd_2	= 1;
+		pt1000[ch].bcd_3	= 1;
+		pt1000[ch].bcd_4	= 1;
+
+		pt1000[ch].heater_onoff		=	OFF_RELAY;
+		pt1000[ch].heaterled_onoff	=	OFF_LED;
+		pt1000[ch].errorled_onoff	=	OFF_LED;
+		pt1000[ch].setled_onoff		=	OFF_LED;
+
+		
 	}
+}
+
+
+void main(void)
+{
+	
+
+	di();
+	init_mcu();
+	init_port();
+	init_timer0();
+	init_ad();
+    ei();
+
+	b_conversion_ad = 1;	
+	
+	init_pt1000();
 
 	
     while (1)
     {
+		unsigned int i;
+	
 		CLRWDT();
 
-		process_AD();
+		process_ad();
 
 		
 		// todo !!!
-		onoff_heater_when_adupdated();
+		for (i=0; i<4; i++)
+		{
+			onoff_setled_heater_as_channel(i);
 
-				
+			pt1000[i].heaterled_onoff = onoff_heaterled_by_heater(i);
+		}				
+
+		set_all_heater_pin();	
+		set_all_heaterled_pin();
+		set_all_setled_pin();			
+		set_all_errorled_pin();
+		set_all_bcd_by_input_pin();		
     }
 }
 
@@ -373,6 +367,6 @@ void interrupt isr(void)
 		set_input_ad(ad);
 		
         ADIF = 0;
-        DONE = 0;
+        b_conversion_ad = 0;
     }	
 }

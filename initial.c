@@ -4,7 +4,7 @@
 #include "initial.h"
 
 
-void	PortInit(void)
+void	init_port(void)
 {
 	TRISA=1;
 	TRISB=1;
@@ -110,7 +110,7 @@ void	PortInit(void)
 }
 
 
-void	Timer0Init(void)
+void	init_timer0(void)
 {
   TMR0IE=1;
   TMR0IF=0;

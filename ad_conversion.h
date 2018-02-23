@@ -9,15 +9,15 @@ typedef	unsigned char	uchar;
 #define	TRUE	1
 #define	FALSE	0
 
-#define AD_do		DONE
+#define b_conversion_ad		DONE
 #define CH_MAX	4 
 
-extern unsigned int AD_IN_mV_buffer[CH_MAX];
-extern unsigned char AD_updated_buffer[CH_MAX];
+extern unsigned int ad_updated_mv[CH_MAX];
+extern unsigned char b_updated_ad[CH_MAX];
 extern unsigned    int   	AD_channel;
 
-extern void process_AD(void);
-extern void	InitAD(void);
+extern void process_ad(void);
+extern void	init_ad(void);
 extern void set_input_ad(unsigned int ad);
 
 #endif

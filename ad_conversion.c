@@ -6,7 +6,7 @@
 
 
 unsigned    int   	AD_channel;
-bit	AD_interrupted = 0;
+bool	b_ad_interrupted = 0;
 unsigned 	int	    in_ad_changed 	= 0;
 bool b_ad_calc_enable;
 unsigned char ad_calc_wait_count;
@@ -14,16 +14,15 @@ unsigned	long    SumAD	= 0;
 unsigned	int	    SumCnt	= 0;
 
 
-unsigned int AD_IN_mV_buffer[CH_MAX] = {0,}; 
-unsigned char AD_updated_buffer[CH_MAX] = {0,};
+unsigned int ad_updated_mv[CH_MAX] = {0,}; 
+unsigned char b_updated_ad[CH_MAX] = {0,};
 
 unsigned int ccr_in_current_mV = 0;
-bit A_IN_mV_was_updated = FALSE;
 unsigned int V_IN_mV = 0;
 unsigned    int   	bef_ad_channel	= 0;
 
 
-void	InitAD(void)
+void	init_ad(void)
 {
 	TRISA0=1;
 	TRISA1=1;
@@ -49,7 +48,7 @@ void	InitAD(void)
     ADIF = 0;
     ADIE = 1;
 
-    DONE = 1;
+    b_conversion_ad = 1;
 
 }
 
@@ -73,7 +72,7 @@ bool is_update_AD(   )
     unsigned char i;
     unsigned char sum_count;
 
-    if (!AD_interrupted) return FALSE;
+    if (!b_ad_interrupted) return FALSE;
 
     // 변경시 쓰레기 값이 저장되는 문제 때문에 추가 하였다.
     if (!b_ad_calc_enable)
@@ -89,8 +88,8 @@ bool is_update_AD(   )
         if (SumCnt >= sum_count)
         {
             AdVal =  ((SumAD * 1000) / (0xfff / 5)) / SumCnt ; // 12비트 5000 mV 기준
-            AD_IN_mV_buffer[AD_channel] = (unsigned int)AdVal;
-            AD_updated_buffer[AD_channel] = TRUE;
+            ad_updated_mv[AD_channel] = (unsigned int)AdVal;
+            b_updated_ad[AD_channel] = TRUE;
 
             SumAD = 0;
             SumCnt = 0;
@@ -101,8 +100,8 @@ bool is_update_AD(   )
     }
 
 
-    AD_interrupted = FALSE;
-    DONE = 1;
+    b_ad_interrupted = FALSE;
+    b_conversion_ad = 1;
 
     return FALSE;
 }
@@ -200,7 +199,7 @@ void check_changing_of_AD_channel()
 }
 
 
-void process_AD(void)
+void process_ad(void)
 {
     if (!is_update_AD()) return;
 
@@ -209,18 +208,18 @@ void process_AD(void)
 
     check_changing_of_AD_channel();
 
-    AD_interrupted = FALSE;
+    b_ad_interrupted = FALSE;
 
-    AD_do = 1;
+    b_conversion_ad = 1;
 }
 
 
 void set_input_ad(unsigned int ad)
 {
-    if (!AD_interrupted)
+    if (!b_ad_interrupted)
     {
         in_ad_changed = ad;
-        AD_interrupted = TRUE;
+        b_ad_interrupted = TRUE;
     }
 }
 

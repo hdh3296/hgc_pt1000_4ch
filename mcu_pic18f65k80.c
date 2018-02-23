@@ -20,7 +20,7 @@ __CONFIG(7, (EBTR0_OFF & EBTR1_OFF & EBTR2_OFF & EBTR3_OFF & EBTRB_OFF & 0xffff)
 
 
 //√ ±‚»≠.
-void  CPU_Initial(void)
+void  init_mcu(void)
 {
 
 ///////////////////////////////////////////////
