@@ -4,10 +4,10 @@
 #include "mcu_pic18f65k80.h"
 
 //configuration
-__CONFIG(1, (RETEN_OFF & INTOSCSEL_LOW & SOSCSEL_DIG & XINST_OFF & FOSC_HS1 & PLLCFG_ON & FCMEN_OFF & IESO_OFF	& 0xffff)); 				  
-__CONFIG(2, (PWRTEN_ON & BOREN_SBORDIS & BOREN_ON & BORV_1 & BORPWR_LOW  & WDTEN_NOSLP & WDTPS_64 & 0xffff));		   
+__CONFIG(1, (RETEN_OFF & INTOSCSEL_LOW & SOSCSEL_DIG & XINST_OFF & FOSC_HS1 & PLLCFG_ON & FCMEN_OFF & IESO_OFF	& 0xffff));
+__CONFIG(2, (PWRTEN_ON & BOREN_SBORDIS & BOREN_ON & BORV_1 & BORPWR_LOW  & WDTEN_NOSLP & WDTPS_64 & 0xffff));
 __CONFIG(3, (CANMX_PORTB & T0CKMX_PORTB & T3CKMX_PORTG & MSSPMSK_MSK7 & MCLRE_ON	& 0xffff)); 						// PORTB digital on RESET
-__CONFIG(4, (STVREN_ON & BBSIZ_BB2K & 0xffff));	
+__CONFIG(4, (STVREN_ON & BBSIZ_BB2K & 0xffff));
  // DEBUG disabled,
  // XINST disabled
  // LVP disabled
@@ -27,7 +27,7 @@ void  init_mcu(void)
 // INTCON Register
 	GIE=0;        // global interrupt enable
   	PEIE=0;	    // peripheral interrupt enable
-  	TMR0IE=1;	    // TMR0 overflow interrupt enable
+  	TMR0IE=0;	    // TMR0 overflow interrupt enable
   	INT0IE=0;	    // external interrupt 0 enable
   	RBIE=0;	    // RB port change interrupt enable
   	TMR0IF=0;	    // TMR0 overflow interrupt flag
@@ -101,7 +101,7 @@ void  init_mcu(void)
 ////////  	T1SYNC=0;	    // Sync Selct
 ////////  	TMR1CS=0;	    // TMR Clock Source Select..(internal clock)
 ////////  	TMR1ON=1;	    // TMR on/off...............( tmr run)
-// 	
+//
 
 	T1CONbits.RD16=1;	// 16 Bit Read/Write Enable
  	T1CONbits.SOSCEN=1;  /////////?????????????????
@@ -151,11 +151,11 @@ static          near bit	T2OUTPS3	@ ((unsigned)&T2CON*8)+6;
   	SSPOV=0;	    // recieve overflow indicator
   	SSPEN=0;	    // SSP enable
   	CKP=0;	    // clock polarity select
-  	SSPM3=0;	    // SSP mode select 
+  	SSPM3=0;	    // SSP mode select
   	SSPM2=1;
   	SSPM1=0;
   	SSPM0=1;
-	
+
 
 // SSPCON2 Register.......(not use)
 
@@ -204,7 +204,7 @@ static          near bit	T2OUTPS3	@ ((unsigned)&T2CON*8)+6;
   	CM0=1;
 */
 
-// T3CON Register.......(not use) 
+// T3CON Register.......(not use)
 	T3CON=0;
 /*
   T3RD16=0;	    // 16-Bit Read/Write select
@@ -234,7 +234,7 @@ static          near bit	T2OUTPS3	@ ((unsigned)&T2CON*8)+6;
 
 
 
-// RCSTA Register  
+// RCSTA Register
 	RCSTA=0;
 /*
   SPEN=0;	  // serial port enable...(disable)
@@ -269,7 +269,7 @@ static          near bit	T2OUTPS3	@ ((unsigned)&T2CON*8)+6;
   TXB1IP=0;	  // CAN TX buffer 1 interrupt priority
   TXB0IP=0;	  // CAN TX buffer 0 interrupt priority
   RXB1IP=0;	  // CAN RX buffer 1 interrupt priority
-  RXB0IP=1;	  // CAN RX buffer 0 interrupt priority	     
+  RXB0IP=1;	  // CAN RX buffer 0 interrupt priority
 
 // PIR3 Register
   IRXIF=0;	  // CAN invalid rec. message interrupt flag
@@ -279,7 +279,7 @@ static          near bit	T2OUTPS3	@ ((unsigned)&T2CON*8)+6;
   TXB1IF=0;	  // CAN TX buffer 1 interrupt flag
   TXB0IF=0;	  // CAN TX buffer 0 interrupt flag
   RXB1IF=0;	  // CAN RX buffer 1 interrupt flag
-  RXB0IF=0;	  // CAN RX buffer 0 interrupt flag		
+  RXB0IF=0;	  // CAN RX buffer 0 interrupt flag
 
 // PIE3 Register
   IRXIE=0;	  // CAN invalid rec. message interrupt enable
@@ -289,11 +289,11 @@ static          near bit	T2OUTPS3	@ ((unsigned)&T2CON*8)+6;
   TXB1IE=0;	  // CAN TX buffer 1 interrupt enable
   TXB0IE=0;	  // CAN TX buffer 0 interrupt enable
   RXB1IE=0;	  // CAN RX buffer 1 interrupt enable
-  RXB0IE=0;	  // CAN RX buffer 0 interrupt enable	     
+  RXB0IE=0;	  // CAN RX buffer 0 interrupt enable
 
 
 // IPR2 Register
-  CMIP=0;	     // comparator interrupt priority		
+  CMIP=0;	     // comparator interrupt priority
   EEIP=0;   	// EEPROM write interrupt priority
   BCLIP=0;   	// bus collision interrupt priority
   HLVDIP=0;	    // low voltage detect interrupt priority
@@ -302,7 +302,7 @@ static          near bit	T2OUTPS3	@ ((unsigned)&T2CON*8)+6;
 
 
 // PIR2 Register
-  CMIF=0;	   // comparator interrupt flag		
+  CMIF=0;	   // comparator interrupt flag
   EEIF=0;	   // EEPROM write interrupt flag
   BCLIF=0;	   // bus collision interrupt flag
   HLVDIF=0;	   // low voltage detect interrupt flag
@@ -311,7 +311,7 @@ static          near bit	T2OUTPS3	@ ((unsigned)&T2CON*8)+6;
 
 
 // PIE2 Register
-  CMIE=0;	  // comparator interrupt enable		
+  CMIE=0;	  // comparator interrupt enable
   EEIE=0;	  // EEPROM write interrupt enable
   BCLIE=0; 	  // bus collision interrupt enable
   HLVDIE=0;	  // low voltage detect interrupt enable
